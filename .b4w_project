@@ -1,0 +1,28 @@
+[info]
+author = GDM
+icon = 
+name = Cups
+title = Cups
+
+[paths]
+assets_dirs = projects/Cups/assets;
+blend_dirs = projects/Cups/blender;
+blender_exec = C:\SteamLibrarySSD\steamapps\common\Blender\blender.exe
+build_dir = projects/Cups/build
+deploy_dir = 
+
+[compile]
+apps = 
+css_ignore = 
+engine_type = copy
+ignore = 
+js_ignore = 
+optimization = simple
+use_physics = True
+
+[deploy]
+assets_path_dest = assets
+assets_path_prefix = assets
+ignore = 
+override = 
+
