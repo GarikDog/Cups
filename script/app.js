@@ -1,128 +1,6 @@
-
-// register the application module
-b4w.register("Cups_main", function(exports, require) {
-
-// import modules used by the app
-var m_app       = require("app");
-var m_cfg       = require("config");
-var m_data      = require("data");
-var m_preloader = require("preloader");
-var m_ver       = require("version");
-var m_scenes  = require("scenes");
-var m_tex = require("textures");
-
-// detect application mode
-var DEBUG = (m_ver.type() == "DEBUG");
-
-// automatically detect assets path
-var APP_ASSETS_PATH = m_cfg.get_assets_path("Cups");
-
-/**
- * export the method to initialize the app (called at the bottom of this file)
- */
-exports.init = function() {
-    m_app.init({
-        canvas_container_id: "main_canvas_container",
-        callback: init_cb,
-        show_fps: DEBUG,
-        console_verbose: DEBUG,
-        autoresize: true
-    });
-}
-
-/**
- * callback executed when the app is initialized 
- */
-function init_cb(canvas_elem, success) {
-
-    if (!success) {
-        console.log("b4w init failure");
-        return;
-    }
-
-    m_preloader.create_preloader();
-
-    // ignore right-click on the canvas element
-    canvas_elem.oncontextmenu = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    };
-
-    load();
-}
-
-/**
- * load the scene data
- */
-function load() {
-    m_data.load(APP_ASSETS_PATH + "Cups.json", load_cb, preloader_cb);
-}
-
-/**
- * update the app's preloader
- */
-function preloader_cb(percentage) {
-    m_preloader.update_preloader(percentage);
-}
-
-/**
- * callback executed when the scene data is loaded
- */
-function load_cb(data_id, success) {
-
-    if (!success) {
-        console.log("b4w load failure");
-        return;
-    }
-
-    m_app.enable_camera_controls();
-
-    // place your code here
-	
-	canvas.on('mouse:down', function(options) {
-  	var buf = canvas.getZoom();
-	canvas.setZoom(1);
-	var dot = canvas.getVpCenter();
-	canvas.absolutePan(new fabric.Point(0,0));
-	var image = getImage(document.getElementById("c"));
-	var cube = m_scenes.get_object_by_name("cup");
-	image.onload = function() {
-    m_tex.replace_image(cube, "Texture.007", image);
-	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	canvas.setZoom(buf);
-}
-});
-	
-	
-	
-	
-	/*function s (){
-		var buf = canvas.getZoom();
-	canvas.setZoom(1);
-	var dot = canvas.getVpCenter();
-	canvas.absolutePan(new fabric.Point(0,0));
-	var image = getImage(document.getElementById("c"));
-	var cube = m_scenes.get_object_by_name("cup");
-	image.onload = function() {
-    m_tex.replace_image(cube, "Texture.007", image);
-	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	canvas.setZoom(buf);
-}
-	
-	}
-	setInterval(s, 100)*/
-	
-}
-
-
-});
-
-// import the app module and start the app by calling the init method
-b4w.require("Cups_main").init();
-
-
 var canvas = new fabric.Canvas('c');
+
+
 
 $("#text").on("click", function(e) {
 text = new fabric.Text($("#text").val(), { left: 100, top: 100 });
@@ -209,6 +87,14 @@ $(function(){
     
 }) ;
 
+var img = getImage(document.getElementById("c"));
+document.getElementById('car').appendChild(img);
+var img = getImage(document.getElementById("c"));
+$("#car").attr("src",'12');
+function im(){
+var img = getImage(document.getElementById("c"));
+$("#car").attr("src",'12');
+}
 
 function getImage(canvas){
 	var imageData = canvas.toDataURL();
@@ -232,7 +118,22 @@ function saveCanvasAsImageFile(){
 	
 	canvas.setZoom(buf);}
 	
-
+/*function sendimageServer(){
+var imageData = canvas.toDataURL();
+$.ajax({
+  type: "POST",
+  url: "script.php",
+  data: { 
+     imgBase64: dataURL
+  }
+}).done(function(o) {
+  console.log('saved'); 
+  // If you want the file to be visible in the browser 
+  // - please modify the callback in javascript. All you
+  // need is to return the url to the file, you just saved 
+  // and than put the image in your browser.
+});
+}*/
 
 document.getElementById('file').addEventListener("change", function (e) {
   var file = e.target.files[0];

@@ -1,0 +1,12 @@
+#a{
+    overflow:hidden;
+    width:1200px;
+    height:530px;
+	border: 2px solid black;
+	}
+ canvas { 
+	
+	margin:auto;
+    width: 100%; 
+    height: 100%;
+    }

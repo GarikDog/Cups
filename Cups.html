@@ -9,7 +9,7 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
 
 <link rel="stylesheet" href="Cups.css" type="text/css">
-
+  <link href="css/style.css" rel="stylesheet">
 <script type="text/javascript" src="..\..\src\b4w.js"></script>
 <script type="text/javascript" src="..\..\src\anchors.js"></script>
 <script type="text/javascript" src="..\..\src\animation.js"></script>
@@ -114,13 +114,41 @@
 <script type="text/javascript" src="..\..\src\libs\md5.js"></script>
 <script type="text/javascript" src="..\..\src\libs\pako_inflate.js"></script>
 <script type="text/javascript" src="..\..\src\addons\ns_compat.js"></script>
+<script src="script/jquery-3.2.1.min.js"></script>
+ <script src="script/fabric.js"></script>
 
-<script type="text/javascript" src="Cups.js"></script>
 
 </head>
 
 <body>
+<div>
+<button id="rect">Rect</button>
+<button id="circ">Circ</button>
+<input type="text" id="text" />
+<br> 
+<div id="a">
+<canvas id="c" width="2400" height="1060"></canvas>
+</div>
+<br>  
+<p class="save">
+</p>
+
+<button id="zoomIn">+</button>
+<button id="zoomOut">-</button>
+
+<button id="goLeft"><</button>
+<button id="goRight">></button>
+<button id="goUp">Up</button>
+<button id="goDown">Down</button>
+<br>
+<button onclick="saveCanvasAsImageFile()">
+Сохранить
+</button>
+<br>
+<input type="file" id="file"><br>
+</div>
   <div id="main_canvas_container"></div>
+  <script type="text/javascript" src="Cups.js"></script>
 </body>
 
 </html>
