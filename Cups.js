@@ -80,17 +80,17 @@ function load_cb(data_id, success) {
 
     // place your code here
 	
-	canvas.on('mouse:down', function(options) {
-  	var buf = canvas.getZoom();
-	canvas.setZoom(1);
-	var dot = canvas.getVpCenter();
-	canvas.absolutePan(new fabric.Point(0,0));
-	var image = getImage(document.getElementById("c"));
+	canvas.on('after:render', function(options) {
+  	var buf = canvas2.getZoom();
+	canvas2.setZoom(1);
+	var dot = canvas2.getVpCenter();
+	canvas2.absolutePan(new fabric.Point(0,0));
+	var image = getImage(document.getElementById("c2"));
 	var cube = m_scenes.get_object_by_name("cup");
 	image.onload = function() {
     m_tex.replace_image(cube, "Texture.007", image);
-	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	canvas.setZoom(buf);
+	canvas2.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
+	canvas2.setZoom(buf);
 }
 });
 	
@@ -123,7 +123,8 @@ b4w.require("Cups_main").init();
 
 
 var canvas = new fabric.Canvas('c');
-
+var canvas2 = new fabric.Canvas('c2');
+canvas2.backgroundColor="e7e7e7";
 $("#text").on("click", function(e) {
 text = new fabric.Text($("#text").val(), { left: 100, top: 100 });
 	  canvas.add(text);
@@ -222,15 +223,15 @@ function saveImage(image) {
     link.setAttribute("download", "canvasImage");
     link.click();}
 function saveCanvasAsImageFile(){
-	var buf = canvas.getZoom();
-	canvas.setZoom(1);
-	var dot = canvas.getVpCenter();
-	canvas.absolutePan(new fabric.Point(0,0));
-    var image = getImage(document.getElementById("c"));
+	var buf = canvas2.getZoom();
+	canvas2.setZoom(1);
+	var dot = canvas2.getVpCenter();
+	canvas2.absolutePan(new fabric.Point(0,0));
+    var image = getImage(document.getElementById("c2"));
     saveImage(image);
-	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
+	canvas2.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
 	
-	canvas.setZoom(buf);}
+	canvas2.setZoom(buf);}
 	
 
 
@@ -247,4 +248,55 @@ document.getElementById('file').addEventListener("change", function (e) {
     });
   };
   reader.readAsDataURL(file);
+});
+
+
+
+canvas.on('after:render', function (e) {
+  clon_canvas();
+});
+
+// doing some stuffs on 'canvas'
+$(document).ready(function() {
+            
+    $('#clone').click(
+      function(){canvas2.loadFromJSON(JSON.stringify(canvas), function(){canvas2.renderAll()}); })
+});
+
+function clon_canvas(){
+	canvas2.loadFromJSON(JSON.stringify(canvas), function(){
+		canvas2.backgroundColor="#E7E7E7";
+		canvas2.renderAll()});
+}
+
+
+
+function deleteObjects(){
+	var activeObject = canvas.getActiveObject(),
+    activeGroup = canvas.getActiveGroup();
+    if (activeObject) {
+        
+            canvas.remove(activeObject);
+        
+    }
+    else if (activeGroup) {
+       
+            var objectsInGroup = activeGroup.getObjects();
+            canvas.discardActiveGroup();
+            objectsInGroup.forEach(function(object) {
+            canvas.remove(object);
+            });
+        
+    }
+}
+
+
+
+
+
+$('html').keydown(function(eventObject){ //отлавливаем нажатие клавиш
+  if (event.keyCode == 46) { //если нажали Enter, то true
+
+	deleteObjects();
+  }
 });
