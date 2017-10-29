@@ -79,39 +79,24 @@ function load_cb(data_id, success) {
     m_app.enable_camera_controls();
 
     // place your code here
-	
-	canvas.on('after:render', function(options) {
-  	var buf = canvas2.getZoom();
-	canvas2.setZoom(1);
-	var dot = canvas2.getVpCenter();
-	canvas2.absolutePan(new fabric.Point(0,0));
-	var image = getImage(document.getElementById("c2"));
 	var cube = m_scenes.get_object_by_name("cup");
+	canvas.on('mouse:up', function(options) {
+  //	var buf = canvas2.getZoom();
+	//canvas2.setZoom(1);
+	//var dot = canvas2.getVpCenter();
+	//canvas2.absolutePan(new fabric.Point(0,0));	
+	var image = getImage(document.getElementById("c2"));
 	image.onload = function() {
     m_tex.replace_image(cube, "Texture.007", image);
-	canvas2.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	canvas2.setZoom(buf);
+	//canvas2.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
+	//canvas2.setZoom(buf);
 }
 });
 	
 	
 	
 	
-	/*function s (){
-		var buf = canvas.getZoom();
-	canvas.setZoom(1);
-	var dot = canvas.getVpCenter();
-	canvas.absolutePan(new fabric.Point(0,0));
-	var image = getImage(document.getElementById("c"));
-	var cube = m_scenes.get_object_by_name("cup");
-	image.onload = function() {
-    m_tex.replace_image(cube, "Texture.007", image);
-	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	canvas.setZoom(buf);
-}
 	
-	}
-	setInterval(s, 100)*/
 	
 }
 
@@ -168,7 +153,7 @@ var frame = new fabric.Rect({
 canvas.add(frame);
 frame.set('selectable', false)
 
-//canvas.setZoom(canvas.getZoom()/2.2);
+
 canvas.zoomToPoint(new fabric.Point(canvas.width / 25, canvas.height / 25), canvas.getZoom() /2.2);
 
 $(function(){
@@ -223,15 +208,14 @@ function saveImage(image) {
     link.setAttribute("download", "canvasImage");
     link.click();}
 function saveCanvasAsImageFile(){
-	var buf = canvas2.getZoom();
-	canvas2.setZoom(1);
-	var dot = canvas2.getVpCenter();
-	canvas2.absolutePan(new fabric.Point(0,0));
-    var image = getImage(document.getElementById("c2"));
+	var buf = canvas.getZoom();
+	canvas.setZoom(1);
+	var dot = canvas.getVpCenter();
+	canvas.absolutePan(new fabric.Point(0,0));
+    var image = getImage(document.getElementById("c"));
     saveImage(image);
-	canvas2.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
-	
-	canvas2.setZoom(buf);}
+	canvas.absolutePan(new fabric.Point(dot.x - 1200,dot.y - 530));
+	canvas.setZoom(buf);}
 	
 
 
@@ -296,7 +280,98 @@ function deleteObjects(){
 
 $('html').keydown(function(eventObject){ //отлавливаем нажатие клавиш
   if (event.keyCode == 46) { //если нажали Enter, то true
-
 	deleteObjects();
   }
+  
+  if(eventObject.ctrlKey && eventObject.keyCode==90) {
+	   replay(undo, redo, '#redo', this);
+	  
+  }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var state;
+         // past states
+        var undo = [];
+         // reverted states
+        var redo = [];
+
+        /**
+         * Push the current state into the undo stack and then capture the current state
+         */
+        function save() {
+          // clear the redo stack
+          redo = [];
+          $('#redo').prop('disabled', true);
+          // initial call won't have a state
+          if (state) {
+            undo.push(state);
+            $('#undo').prop('disabled', false);
+          }
+          state = JSON.stringify(canvas);
+        }
+
+        /**
+         * Save the current state in the redo stack, reset to a state in the undo stack, and enable the buttons accordingly.
+         * Or, do the opposite (redo vs. undo)
+         * @param playStack which stack to get the last state from and to then render the canvas as
+         * @param saveStack which stack to push current state into
+         * @param buttonsOn jQuery selector. Enable these buttons.
+         * @param buttonsOff jQuery selector. Disable these buttons.
+         */
+        function replay(playStack, saveStack, buttonsOn, buttonsOff) {
+          saveStack.push(state);
+          state = playStack.pop();
+          var on = $(buttonsOn);
+          var off = $(buttonsOff);
+          // turn both buttons off for the moment to prevent rapid clicking
+          on.prop('disabled', true);
+          off.prop('disabled', true);
+          canvas.clear();
+          canvas.loadFromJSON(state, function() {
+            canvas.renderAll();
+            // now turn the buttons back on if applicable
+            on.prop('disabled', false);
+            if (playStack.length) {
+              off.prop('disabled', false);
+            }
+          });
+        }
+		
+		save();
+          // register event listener for user's actions
+          canvas.on('object:modified', function() {
+            save();
+          });
+		  
+		   $('#undo').click(function() {
+            replay(undo, redo, '#redo', this);
+          });
+          $('#redo').click(function() {
+            replay(redo, undo, '#undo', this);
+          })

@@ -122,10 +122,15 @@
 
 <body>
 <div>
-<button id="clone">clone</button>
+
 <button id="rect">Rect</button>
 <button id="circ">Circ</button>
-<input type="text" id="text" />
+<button id="undo" disabled>undo</button>
+  <button id="redo" disabled>redo</button>
+<button onclick="saveCanvasAsImageFile()">
+Сохранить
+</button>
+<input type="file" id="file"><br>
 <br> 
 <div id="a">
 <canvas id="c" width="2400" height="1060"></canvas>
@@ -141,13 +146,11 @@
 <button id="goRight">></button>
 <button id="goUp">Up</button>
 <button id="goDown">Down</button>
-<br>
-<button onclick="saveCanvasAsImageFile()">
-Сохранить
-</button>
+
+
 <br>
 
-<input type="file" id="file"><br>
+
 <canvas id="c2" width="2400" height="1060"></canvas>
 </div>
   <div id="main_canvas_container"></div>
